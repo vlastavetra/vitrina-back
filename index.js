@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 dotenv.config();
 const usersRoutes = require("./routes/usersRoutes.js");
+const petsRoutes = require("./routes/petsRoutes.js");
 const mongoose = require("mongoose");
 
 const app = express();
@@ -10,16 +11,7 @@ const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.options("*", cors());
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://vitrina-il-back.vercel.app/",
-      "https://pet-adoption-agency-server.vercel.app/",
-    ],
-    credentials: true,
-  })
-);
+app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
@@ -31,6 +23,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/user", usersRoutes);
+app.use("/pet", petsRoutes);
 
 app.use("*", (req, res) => {
   res.status(404).send({ message: "Oops page not found" });

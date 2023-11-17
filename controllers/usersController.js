@@ -4,6 +4,7 @@ const {
   updateUserModel,
   getUsersModel,
 } = require("../models/usersModels");
+const { getUserPets } = require("../models/petsModels");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -35,12 +36,14 @@ const getUserData = async (req, res) => {
 };
 
 const getFullUserData = async (req, res) => {
-  const { id } = req.params;
+  const {id} = req.params;
 
   try {
     const user = await getUserByIdModel(id);
     delete user["password"];
-    const obj = { ...user, savedPets, ownedPets };
+    const savedPets = await getUserPets({ _id: { $in: user.savedPets } });
+    const ownedPets = await getUserPets({ _id: { $in: user.ownedPets } });
+    const obj = {...user, savedPets, ownedPets};
     res.status(200).send(obj);
   } catch (err) {
     res.status(500).send(err);
@@ -89,6 +92,8 @@ const getMyPets = async (req, res) => {
 
   try {
     const user = await getUserByIdModel(userId);
+    const savedPets = await getUserPets({ _id: { $in: user.savedPets } });
+    const ownedPets = await getUserPets({ _id: { $in: user.ownedPets } });
     const obj = {
       savedPets: savedPets,
       ownedPets: ownedPets,
