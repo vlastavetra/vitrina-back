@@ -10,8 +10,15 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
-app.options("*", cors());
-app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://pet-adoption-agency-server.vercel.app/",
+    ],
+    credentials: true,
+  })
+);
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
@@ -36,7 +43,7 @@ app.use((err, req, res, next) => {
 async function init() {
   const connection = await mongoose
     .set("strictQuery", true)
-    .connect(process.env.MONGO_URI, {
+    .connect(process.env.MONGODB_URI, {
       dbName: "adoptionAgencyDb",
       useNewUrlParser: true,
       useUnifiedTopology: true,
