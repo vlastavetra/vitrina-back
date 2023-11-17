@@ -12,7 +12,11 @@ app.use(express.json());
 app.options("*", cors());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://vitrina-il-back.vercel.app/"],
+    origin: [
+      "http://localhost:3000",
+      "https://vitrina-il-back.vercel.app/",
+      "https://pet-adoption-agency-server.vercel.app/",
+    ],
     credentials: true,
   })
 );
